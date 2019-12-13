@@ -1,0 +1,44 @@
+﻿@model ModelObject
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<h1>@ViewBag.Name detail</h1>
+
+<table class="table table-bordered table-hover">
+    @if (@ViewBag.Type.Equals("relation"))
+    {
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        @foreach (ModelObject obj in @Model.Value)
+        {
+            <tr>
+@*                 @if (@obj.Type.Equals("relKey")) *@
+@*                 { *@
+@*                     @foreach (ModelObject m in @obj.Value) *@
+@*                     { *@
+@*                         <td>@m.Name</td> *@
+@*                         <td>@m.Type</td> *@
+@*                         <td>@m.LastValue</td> *@
+@*                     } *@
+@* *@
+@*                 } *@
+                @foreach (var o in @obj.Value)
+                {
+                    <td>@o.Name</td>
+                    <td>@o.Type</td>
+                    <td>@o.LastValue</td>
+                }
+            </tr>
+        }
+
+        </tbody>
+    }
+</table>

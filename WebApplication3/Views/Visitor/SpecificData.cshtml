@@ -1,0 +1,53 @@
+﻿@model List<WebApplication3.Models.v4.ModelObjectv4>
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<h1>@ViewBag.Name detail</h1>
+
+<table class="table table-bordered table-hover">
+    @if (@ViewBag.Type.Equals("relation"))
+    {
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        @foreach (var obj in @Model)
+        {
+            <tr>
+                <td>@obj.Name</td>
+                <td>@obj.Type</td>
+                <td>@obj.Value</td>
+             </tr>
+        }
+
+        </tbody>
+    }
+    else
+    {
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        @foreach (var obj in @Model)
+        {
+            <tr>
+                <td>@obj.Name</td>
+                <td>@obj.Type</td>
+                <td>@obj.Value</td>
+            </tr>
+        }
+
+        </tbody>
+    }
+</table>
