@@ -80,7 +80,10 @@ namespace WebApplication3.Services
 
             public void ScalarAsObject(object content)
             {
-                _tempModelObject.Type = string.Format(CultureInfo.InvariantCulture, "{0}", content.GetType());
+                if (content != null)
+                {
+                    _tempModelObject.Type = string.Format(CultureInfo.InvariantCulture, "{0}", content.GetType());
+                }
             }
 
             public bool NeedScalarAsText()
