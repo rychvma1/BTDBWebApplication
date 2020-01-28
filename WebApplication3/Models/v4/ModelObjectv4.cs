@@ -15,8 +15,5 @@ namespace WebApplication3.Models.v4
     public class ModelObjectv4 : BaseObjectV4
     {
         public string Value { get; set; }
-        public string InlineObjectName { get; set; }
-        public InlineObjectType InlineObjectType { get; set; }
-        public string Info { get; set; }
     }
 }

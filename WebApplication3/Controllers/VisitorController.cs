@@ -40,7 +40,6 @@ namespace WebApplication3.Controllers
 
             var btdbObject = GetBtdbObject();
 
-            //            list.AddRange(btdbObject.SingletonObjects.Select(singletonObject => singletonObject.BaseObj));
             list.AddRange(btdbObject.SingletonObjects.Select(singletonObject => singletonObject.BaseObj));
             list.AddRange(btdbObject.RelationObjects.Select(relationObject => relationObject.BaseObj));
 

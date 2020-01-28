@@ -13,7 +13,7 @@ namespace WebApplication3.Services
     public class CustomVisitor : ICustomVisitor
     {
         private IObjectDB TempDb { get; }
-        
+
 
         public CustomVisitor(IObjectDB tempDb)
         {
@@ -43,7 +43,7 @@ namespace WebApplication3.Services
 
             public BtdbObject BtdbObject = new BtdbObject
             {
-                BaseObj = new BaseObjectV4 { Name = "BaseObject", Type = "BaseObject" },
+                BaseObj = new BaseObjectV4 {Name = "BaseObject", Type = "BaseObject"},
                 RelationObjects = new List<RelationObject>(),
                 SingletonObjects = new List<SingletonObject>()
             };
@@ -52,23 +52,19 @@ namespace WebApplication3.Services
             {
                 _tempModelObject = new ModelObjectv4();
                 _tempSingletonObject = new SingletonObject();
-                _tempName = tableName;
-                _tempSingletonObject.BaseObj.Name = _tempName;
+                _tempSingletonObject.BaseObj.Name = tableName;
                 _tempSingletonObject.BaseObj.Type = "singleton";
                 return true;
             }
 
             public bool StartObject(ulong oid, uint tableId, string tableName, uint version)
             {
-//                _tempModelObject = new ModelObjectv4();
-//                _tempSingletonObject = new SingletonObject();
-//                _tempSingletonObject.BaseObj.Name = tableName;
-//                _tempSingletonObject.BaseObj.Type = "singleton";
                 return true;
             }
 
             public bool StartField(string name)
             {
+                _tempName = name;
                 _tempModelObject.Name = name;
                 return true;
             }
@@ -104,7 +100,10 @@ namespace WebApplication3.Services
 
             public bool StartInlineObject(uint tableId, string tableName, uint version)
             {
-                _tempModelObject.InlineObjectName = tableName;
+                _tempModelObject.Type = "InlineObject";
+                _tempModelObject.Name = tableName;
+                _tempSingletonObject.ModelObjects.Add(_tempModelObject);
+                _tempModelObject = new ModelObjectv4();
                 return true;
             }
 
@@ -114,16 +113,16 @@ namespace WebApplication3.Services
 
             public bool StartList()
             {
-//                _tempSingletonObject.BaseObj.Name = _tempName;
-//                _tempSingletonObject.BaseObj.Type = "singleton";
+                _tempModelObject.Type = "List";
+                _tempModelObject.Name = _tempName;
+                _tempSingletonObject.ModelObjects.Add(_tempModelObject);
                 _tempModelObject = new ModelObjectv4();
-                _tempModelObject.InlineObjectType = InlineObjectType.List;
                 return true;
             }
 
             public bool StartItem()
             {
-                _tempModelObject.Info = "ListItem";
+                _tempModelObject.Name = "ListItem";
                 return true;
             }
 
@@ -134,47 +133,41 @@ namespace WebApplication3.Services
 
             public void EndList()
             {
-//                BtdbObject.SingletonObjects.Add(_tempSingletonObject);
-//                _tempSingletonObject = new SingletonObject();
             }
 
             public bool StartDictionary()
             {
-//                _tempSingletonObject.BaseObj.Name = _tempName;
-//                _tempSingletonObject.BaseObj.Type = "singleton";
-                _tempModelObject.InlineObjectType = InlineObjectType.Dictionary;
+                _tempModelObject.Type = "Dictionary";
+                _tempModelObject.Name = _tempName;
+                _tempSingletonObject.ModelObjects.Add(_tempModelObject);
+                _tempModelObject = new ModelObjectv4();
                 return true;
             }
 
             public bool StartDictKey()
             {
-                _tempModelObject.Info = "DictionaryKey";
+                _tempModelObject.Name = "DictionaryKey";
                 return true;
             }
 
             public void EndDictKey()
             {
                 _tempModelObject = new ModelObjectv4();
-                _tempModelObject.InlineObjectType = InlineObjectType.Dictionary;
             }
 
             public bool StartDictValue()
             {
-                _tempModelObject.Info = "DictionaryValue";
+                _tempModelObject.Name = "DictionaryValue";
                 return true;
             }
 
             public void EndDictValue()
             {
-//                _tempSingletonObject.SingletonObjects.Add(_tempModelObject);
                 _tempModelObject = new ModelObjectv4();
-                _tempModelObject.InlineObjectType = InlineObjectType.Dictionary;
             }
 
             public void EndDictionary()
             {
-//                BtdbObject.SingletonObjects.Add(_tempSingletonObject);
-//                _tempSingletonObject = new SingletonObject();
             }
 
             public void EndField()
@@ -191,7 +184,6 @@ namespace WebApplication3.Services
             public bool StartRelation(string relationName)
             {
                 _tempModelObject = new ModelObjectv4();
-                _tempModelObject.InlineObjectType = InlineObjectType.Null;
                 _tempRelationObject = new RelationObject();
                 _tempRelationObject.BaseObj.Name = relationName;
                 _tempRelationObject.BaseObj.Type = "relation";
@@ -200,7 +192,6 @@ namespace WebApplication3.Services
 
             public bool StartRelationKey()
             {
-                _tempModelObject.InlineObjectName = "relationKey";
                 return true;
             }
 
@@ -210,7 +201,6 @@ namespace WebApplication3.Services
 
             public bool StartRelationValue()
             {
-                _tempModelObject.InlineObjectName = "relationValue";
                 return true;
             }
 
