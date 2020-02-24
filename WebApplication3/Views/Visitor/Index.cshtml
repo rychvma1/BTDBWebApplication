@@ -8,28 +8,46 @@
 <div>
     <table class="table table-bordered table-hover">
         <thead>
-            <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Type
-                </th>
-                <th>
-                    Value
-                </th>
-            </tr>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Value
+            </th>
+        </tr>
         </thead>
         <tbody>
-            @foreach (var baseObject in Model)
-            {
-                <tr>
-                    <td>@baseObject.Name</td>
-                    <td>@baseObject.Type</td>
-                    <td>@Html.ActionLink("Detail", "SpecificData", "Visitor", new { name = baseObject.Name, type = baseObject.Type })</td>
-                </tr>
-            }
+        @foreach (var baseObject in Model)
+        {
+            <tr>
+                <td>@baseObject.Name</td>
+                <td>@baseObject.Type</td>
+                <td>
+                    <a href="@Url.Action("SpecificData", "Visitor", new {})">
+                        @using (Html.BeginForm("SpecificData", "Visitor", FormMethod.Post))
+                        {
+                            @Html.Hidden("Name", (object) baseObject.Name)
+                            @Html.Hidden("Type", (object) baseObject.Type)
+                            <input type="submit" value="Detail"/>
+                        }
+                    </a>
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
+    
+    @if (ViewBag.Pages != null)
+    {
+        <ul class="pagination">
+            @for (int i = 1; i <= ViewBag.Pages; i++)
+            {
+                <li class="@(ViewBag.CurrentPage == i ? "active" : "")"><a href="@Url.Action("Index", "Visitor", new{page = i})">@i</a></li>
+            }
+        </ul>
+    }
 </div>
-

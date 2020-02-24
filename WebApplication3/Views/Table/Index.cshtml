@@ -1,34 +1,14 @@
-﻿@model List<BaseObject>
+﻿@model WebApplication3.Models.v4.BtdbObject
 @{
     ViewData["Title"] = "Base data";
 }
 
-<h1>Base data types table</h1>
+<div>
+    <a href="@Url.Action("GetJson", "Table", new {})">Show Json data</a>
+</div>
 
 <div>
-    <table class="table table-bordered table-hover">
-        <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Type
-            </th>
-            <th>
-                Value
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var baseObject in Model)
-        {
-            <tr>
-                <td>@baseObject.Name</td>
-                <td>@baseObject.Type</td>
-                <td>@Html.ActionLink("Detail", "SpecificData", "Table", new {name = baseObject.Name, type = baseObject.Type})</td>
-            </tr>
-        }
-        </tbody>
-    </table>
+    <a href="@Url.Action("DownloadJson", "Table", new {})">Download</a>
 </div>
+
+

@@ -1,113 +1,41 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication3.Models;
+using Microsoft.Extensions.FileProviders;
+using Newtonsoft.Json;
 using WebApplication3.Services;
 
 namespace WebApplication3.Controllers
 {
     public class TableController : Controller
     {
-        private readonly ICustomDataServices _services;
+        private readonly ICustomVisitor _services;
+        private readonly PhysicalFileProvider _provider;
 
-        public TableController(ICustomDataServices services)
+        public TableController(ICustomVisitor services)
         {
             _services = services;
+            _provider = new PhysicalFileProvider(AppDomain.CurrentDomain.BaseDirectory);
         }
 
         public IActionResult Index()
         {
-            var baseObjects = getBaseObjects();
-
-//            if (baseObjects == null)
-//            {
-//                return View();
-//            }
-
-            return View(baseObjects);
+            var json = JsonConvert.SerializeObject(_services.IterateDB());
+            System.IO.File.WriteAllText(_provider.Root + "JSON.json", json);
+            return View();
         }
 
-        public IActionResult SpecificData(string name, string type)
+        public JsonResult GetJson()
         {
-            var modelObject = getModelObject(name, type);
-
-//            if (type.Equals("relation"))
-//            {
-//                foreach (var obj in modelObject.Value)
-//                {
-//                    if (obj.Type.Equals("relKey"))
-//                    {
-//
-//                    }
-//                }
-//            }
-
-            ViewBag.Name = name;
-            ViewBag.Type = type;
-            return View(modelObject);
+            var json = _services.IterateDB();
+            return Json(json);
         }
 
-        private List<ModelObject> getDataFromBTDB()
+        public IActionResult DownloadJson()
         {
-            return _services.IterateDb();
-        }
-
-        private List<BaseObject> getBaseObjects()
-        {
-//            var baseObjs = new List<BaseObject>();
-//            getDataFromBTDB()[0].Value.ForEach(o =>
-//            {
-//                baseObjs.Add(new BaseObject { Name = o.Name, Type = o.Type });
-//            });
-//            return baseObjs;
-            var baseObjects = new List<BaseObject>();
-            getDataFromBTDB()[0].Value.ForEach(o =>
-            {
-                baseObjects.Add(new BaseObject {Name = o.Name, Type = o.Type});
-            });
-            return baseObjects;
-        }
-
-        private ModelObject getModelObject(string name, string type)
-        {
-            var correctObj = new ModelObject();
-            foreach (var baseObj in getDataFromBTDB()[0].Value.Where(obj => obj.Name == name && obj.Type == type))
-            {
-                correctObj = baseObj;
-            }
-
-            return correctObj;
-        }
-
-        private List<ModelObject> getRelKeys(ModelObject model)
-        {
-           var listOfRelKeys = new List<ModelObject>();
-
-           foreach (var keys in model.Value)
-           {
-               if (keys.Type.Equals("relKey"))
-               {
-                    listOfRelKeys.Add(keys.Value[0]);
-               }
-           }
-
-           return listOfRelKeys;
-        }
-
-        private List<ModelObject> getRelValues(ModelObject model)
-        {
-            var listOfRelValues = new List<ModelObject>();
-
-            foreach (var value in model.Value)
-            {
-                if (value.Type.Equals("relValue"))
-                {
-//                    value.Value.ForEach(v => v.Value);
-//                    listOfRelValues.Add();
-                }
-            }
-
-            return listOfRelValues;
+            var fileInfo = _provider.GetFileInfo("JSON.json");
+            var filePath = fileInfo.PhysicalPath;
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+            return File(fileBytes, "application/json", "JSON.json");
         }
     }
 }

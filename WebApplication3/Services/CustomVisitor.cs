@@ -192,6 +192,7 @@ namespace WebApplication3.Services
 
             public bool StartRelationKey()
             {
+                _tempModelObject.RelKey = true;
                 return true;
             }
 

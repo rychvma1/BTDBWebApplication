@@ -6,48 +6,37 @@
 <h1>@ViewBag.Name detail</h1>
 
 <table class="table table-bordered table-hover">
-    @if (@ViewBag.Type.Equals("relation"))
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    @foreach (var obj in @Model)
     {
-        <thead>
         <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Value</th>
+            <td>@obj.Name</td>
+            <td>@obj.Type</td>
+            <td>@obj.Value</td>
         </tr>
-        </thead>
-        <tbody>
-
-        @foreach (var obj in @Model)
-        {
-            <tr>
-                <td>@obj.Name</td>
-                <td>@obj.Type</td>
-                <td>@obj.Value</td>
-             </tr>
-        }
-
-        </tbody>
     }
-    else
-    {
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Value</th>
-        </tr>
-        </thead>
-        <tbody>
 
-        @foreach (var obj in @Model)
-        {
-            <tr>
-                <td>@obj.Name</td>
-                <td>@obj.Type</td>
-                <td>@obj.Value</td>
-            </tr>
-        }
-
-        </tbody>
-    }
+    </tbody>
 </table>
+
+@* @if (ViewBag.Pages != null) *@
+@* { *@
+@*     <ul class="pagination"> *@
+@*         @for (int i = 1; i <= ViewBag.Pages; i++) *@
+@*         { *@
+@*             <li class="@(ViewBag.CurrentPage == i ? "active" : "")"> *@
+@*                 <a href="@Url.Action("SpecificData", "Visitor", new {page = i})">@i</a> *@
+@*              </li> *@
+@*          } *@
+@*      </ul> *@
+@*  } *@
+
+<p>@Html.ActionLink("Back to table", "Index")</p>
