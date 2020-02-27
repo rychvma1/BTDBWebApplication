@@ -3,7 +3,23 @@
     ViewData["Title"] = "Detail";
 }
 
-<h1>@ViewBag.Name detail</h1>
+<h1>@ViewBag.Name detail (@ViewBag.Type)</h1>
+
+<div>
+    <a href="@Url.Action("GetJson", "Data", new {})">
+        @using (Html.BeginForm("GetJson", "Data", FormMethod.Post))
+        {
+            @Html.Hidden("Name", (object) @ViewBag.Name)
+            @Html.Hidden("Type", (object) @ViewBag.Type)
+            <input type="submit" value="Show Json data"/>
+        }
+    </a>
+
+    <a href="@Url.Action("DownloadJson", "Data", new {})">
+        <button type="submit">Download</button>
+    </a>
+</div>
+
 
 <table class="table table-bordered table-hover">
     <thead>
@@ -39,4 +55,6 @@
 @*      </ul> *@
 @*  } *@
 
-<p>@Html.ActionLink("Back to table", "Index")</p>
+<p>
+    <button type="button">@Html.ActionLink("Back to table", "Index")</button>
+</p>

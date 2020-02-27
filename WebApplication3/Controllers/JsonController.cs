@@ -6,12 +6,12 @@ using WebApplication3.Services;
 
 namespace WebApplication3.Controllers
 {
-    public class TableController : Controller
+    public class JsonController : Controller
     {
         private readonly ICustomVisitor _services;
         private readonly PhysicalFileProvider _provider;
 
-        public TableController(ICustomVisitor services)
+        public JsonController(ICustomVisitor services)
         {
             _services = services;
             _provider = new PhysicalFileProvider(AppDomain.CurrentDomain.BaseDirectory);

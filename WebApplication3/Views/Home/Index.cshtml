@@ -1,8 +1,25 @@
-﻿@{
+﻿@model WebApplication3.Models.Settings
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @Html.ValidationSummary()
+
+    @using (Html.BeginForm("AddPath", "Home", FormMethod.Post, new {@class = "form-horiyontal"}))
+    {
+        <div class="form-group">
+            <label >Path to dir with .trl files</label>
+            <div>
+                @Html.TextBoxFor(x => x.DirPath, new {@class = "form-control"})
+                @Html.ValidationMessageFor(x => x.DirPath)
+            </div>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">Create path</button>
+    }
+
+    <p>Configuration path to .trl directory: @ViewBag.Path</p>
 </div>

@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\matus\.Rider2019.2\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\matus\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_WebApplication3.-949069375.00" t="ExcludeRecursive" />
+    <e p="C:\Users\matus\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\matus\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_WebApplication3.-949069375.00" t="ExcludeRecursive" />
     <e p="C:\Users\matus\source\repos\WebApplication3" t="IncludeFlat">
       <e p="packages" t="ExcludeRecursive" />
       <e p="WebApplication3" t="IncludeRecursive">
+        <e p="App_Data" t="Include">
+          <e p="00000001.trl" t="Include" />
+          <e p="settings.json" t="Include" />
+        </e>
         <e p="appsettings.Development.json" t="Include" />
         <e p="appsettings.json" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="Controllers" t="Include">
           <e p="DataController.cs" t="Include" />
           <e p="HomeController.cs" t="Include" />
-          <e p="TableController.cs" t="Include" />
-          <e p="VisitorController.cs" t="Include" />
+          <e p="JsonController.cs" t="Include" />
         </e>
         <e p="Models" t="Include">
           <e p="BaseObject.cs" t="Include" />
           <e p="BuilderModelObject.cs" t="Include" />
           <e p="ErrorViewModel.cs" t="Include" />
           <e p="ModelObject.cs" t="Include" />
+          <e p="Settings.cs" t="Include" />
+          <e p="SettingsConfigurationProvider.cs" t="Include" />
+          <e p="SettingsExtensions.cs" t="Include" />
+          <e p="SettingsManager.cs" t="Include" />
           <e p="User.cs" t="Include" />
           <e p="v4" t="Include">
             <e p="BaseObjectV4.cs" t="Include" />
@@ -33,6 +40,7 @@
           <e p="Debug" t="Include">
             <e p="netcoreapp3.0" t="Include">
               <e p="WebApplication3.AssemblyInfo.cs" t="Include" />
+              <e p="WebApplication3.RazorAssemblyInfo.cs" t="Include" />
             </e>
           </e>
         </e>
@@ -41,31 +49,35 @@
           <e p="launchSettings.json" t="Include" />
         </e>
         <e p="Services" t="Include">
+          <e p="BaseDataService.cs" t="Include" />
           <e p="CustomDataServices.cs" t="Include" />
           <e p="CustomVisitor.cs" t="Include" />
+          <e p="IBaseDataService.cs" t="Include" />
           <e p="ICustomDataServices.cs" t="Include" />
           <e p="ICustomVisitor.cs" t="Include" />
+          <e p="ISpecificRelationDataService.cs" t="Include" />
+          <e p="ISpecificSingletonDataService.cs" t="Include" />
+          <e p="SpecificRelationDataService.cs" t="Include" />
+          <e p="SpecificSingletonSingletonDataService.cs" t="Include" />
         </e>
         <e p="Startup.cs" t="Include" />
         <e p="Views" t="Include">
           <e p="_ViewImports.cshtml" t="Include" />
           <e p="_ViewStart.cshtml" t="Include" />
+          <e p="Data" t="Include">
+            <e p="Index.cshtml" t="Include" />
+            <e p="SpecificData.cshtml" t="Include" />
+          </e>
           <e p="Home" t="Include">
             <e p="Index.cshtml" t="Include" />
-            <e p="Privacy.cshtml" t="Include" />
+          </e>
+          <e p="Json" t="Include">
+            <e p="Index.cshtml" t="Include" />
           </e>
           <e p="Shared" t="Include">
             <e p="_Layout.cshtml" t="Include" />
             <e p="_ValidationScriptsPartial.cshtml" t="Include" />
             <e p="Error.cshtml" t="Include" />
-          </e>
-          <e p="Table" t="Include">
-            <e p="Index.cshtml" t="Include" />
-            <e p="SpecificData.cshtml" t="Include" />
-          </e>
-          <e p="Visitor" t="Include">
-            <e p="Index.cshtml" t="Include" />
-            <e p="SpecificData.cshtml" t="Include" />
           </e>
         </e>
         <e p="WebApplication3.csproj" t="IncludeRecursive" />

@@ -1,43 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using BTDB.KVDBLayer;
 using BTDB.ODBLayer;
-using WebApplication3.Models;
 using WebApplication3.Models.v4;
 
 namespace WebApplication3.Services
 {
-    public class CustomVisitor : ICustomVisitor
+    public class SpecificRelationDataService : ISpecificRelationDataService
     {
         private IObjectDB TempDb { get; }
 
 
-        public CustomVisitor(IObjectDB tempDb)
+        public SpecificRelationDataService(IObjectDB tempDb)
         {
             TempDb = tempDb;
         }
-
-        public BtdbObject IterateDB()
+        
+        public RelationObject IterateDB(string name)
         {
-            BtdbObject btdbObject = new BtdbObject();
-            using (var tr = TempDb.StartTransaction())
+            RelationObject singletonObject = new RelationObject();
+
+            using (var tr = TempDb.StartReadOnlyTransaction())
             {
-                var visitor = new ToDTOVisitor();
+                var visitor = new SpecificRelationDataVisitor();
                 var iterator = new ODBIterator(tr, visitor);
                 iterator.Iterate();
-                btdbObject = visitor.BtdbObject;
+                visitor.BtdbObject.RelationObjects.ForEach(r =>
+                {
+                    if (r.BaseObj.Name.Equals(name))
+                    {
+                        singletonObject = r;
+                    }
+                });
             }
-
-            return btdbObject;
+            
+            return singletonObject;
         }
-
-        internal class ToDTOVisitor : IODBVisitor
+        
+        internal class SpecificRelationDataVisitor : IODBVisitor
         {
             private static RelationObject _tempRelationObject = new RelationObject();
-            private static SingletonObject _tempSingletonObject = new SingletonObject();
             private static ModelObjectv4 _tempModelObject = new ModelObjectv4();
             private static string _tempName = "";
 
@@ -50,10 +52,6 @@ namespace WebApplication3.Services
 
             public bool VisitSingleton(uint tableId, string tableName, ulong oid)
             {
-                _tempModelObject = new ModelObjectv4();
-                _tempSingletonObject = new SingletonObject();
-                _tempSingletonObject.BaseObj.Name = tableName;
-                _tempSingletonObject.BaseObj.Type = "singleton";
                 return true;
             }
 
@@ -90,7 +88,6 @@ namespace WebApplication3.Services
             public void ScalarAsText(string content)
             {
                 _tempModelObject.Value = content;
-                _tempSingletonObject.ModelObjects.Add(_tempModelObject);
                 _tempRelationObject.ModelObjects.Add(_tempModelObject);
             }
 
@@ -102,7 +99,6 @@ namespace WebApplication3.Services
             {
                 _tempModelObject.Type = "InlineObject";
                 _tempModelObject.Name = tableName;
-                _tempSingletonObject.ModelObjects.Add(_tempModelObject);
                 _tempModelObject = new ModelObjectv4();
                 return true;
             }
@@ -115,7 +111,7 @@ namespace WebApplication3.Services
             {
                 _tempModelObject.Type = "List";
                 _tempModelObject.Name = _tempName;
-                _tempSingletonObject.ModelObjects.Add(_tempModelObject);
+                _tempRelationObject.ModelObjects.Add(_tempModelObject);
                 _tempModelObject = new ModelObjectv4();
                 return true;
             }
@@ -139,7 +135,7 @@ namespace WebApplication3.Services
             {
                 _tempModelObject.Type = "Dictionary";
                 _tempModelObject.Name = _tempName;
-                _tempSingletonObject.ModelObjects.Add(_tempModelObject);
+                _tempRelationObject.ModelObjects.Add(_tempModelObject);
                 _tempModelObject = new ModelObjectv4();
                 return true;
             }
@@ -177,8 +173,6 @@ namespace WebApplication3.Services
 
             public void EndObject()
             {
-                BtdbObject.SingletonObjects.Add(_tempSingletonObject);
-                _tempSingletonObject = new SingletonObject();
             }
 
             public bool StartRelation(string relationName)

@@ -27,8 +27,8 @@
                 <td>@baseObject.Name</td>
                 <td>@baseObject.Type</td>
                 <td>
-                    <a href="@Url.Action("SpecificData", "Visitor", new {})">
-                        @using (Html.BeginForm("SpecificData", "Visitor", FormMethod.Post))
+                    <a href="@Url.Action("SpecificData", "Data", new {})">
+                        @using (Html.BeginForm("SpecificData", "Data", FormMethod.Post))
                         {
                             @Html.Hidden("Name", (object) baseObject.Name)
                             @Html.Hidden("Type", (object) baseObject.Type)
@@ -40,14 +40,5 @@
         }
         </tbody>
     </table>
-    
-    @if (ViewBag.Pages != null)
-    {
-        <ul class="pagination">
-            @for (int i = 1; i <= ViewBag.Pages; i++)
-            {
-                <li class="@(ViewBag.CurrentPage == i ? "active" : "")"><a href="@Url.Action("Index", "Visitor", new{page = i})">@i</a></li>
-            }
-        </ul>
-    }
+
 </div>

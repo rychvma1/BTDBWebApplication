@@ -1,42 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using BTDB.KVDBLayer;
 using BTDB.ODBLayer;
-using WebApplication3.Models;
 using WebApplication3.Models.v4;
 
 namespace WebApplication3.Services
 {
-    public class CustomVisitor : ICustomVisitor
+    public class SpecificSingletonSingletonDataService : ISpecificSingletonDataService
     {
         private IObjectDB TempDb { get; }
 
 
-        public CustomVisitor(IObjectDB tempDb)
+        public SpecificSingletonSingletonDataService(IObjectDB tempDb)
         {
             TempDb = tempDb;
         }
 
-        public BtdbObject IterateDB()
+        public SingletonObject IterateDB(string name)
         {
-            BtdbObject btdbObject = new BtdbObject();
-            using (var tr = TempDb.StartTransaction())
+            SingletonObject singletonObject = new SingletonObject();
+
+            using (var tr = TempDb.StartReadOnlyTransaction())
             {
-                var visitor = new ToDTOVisitor();
+                var visitor = new SpecificSingletonDataVisitor();
                 var iterator = new ODBIterator(tr, visitor);
                 iterator.Iterate();
-                btdbObject = visitor.BtdbObject;
+                visitor.BtdbObject.SingletonObjects.ForEach(s =>
+                {
+                    if (s.BaseObj.Name.Equals(name))
+                    {
+                        singletonObject = s;
+                    }
+                });
             }
-
-            return btdbObject;
+            
+            return singletonObject;
         }
 
-        internal class ToDTOVisitor : IODBVisitor
+        internal class SpecificSingletonDataVisitor : IODBVisitor
         {
-            private static RelationObject _tempRelationObject = new RelationObject();
             private static SingletonObject _tempSingletonObject = new SingletonObject();
             private static ModelObjectv4 _tempModelObject = new ModelObjectv4();
             private static string _tempName = "";
@@ -91,7 +93,6 @@ namespace WebApplication3.Services
             {
                 _tempModelObject.Value = content;
                 _tempSingletonObject.ModelObjects.Add(_tempModelObject);
-                _tempRelationObject.ModelObjects.Add(_tempModelObject);
             }
 
             public void OidReference(ulong oid)
@@ -183,16 +184,11 @@ namespace WebApplication3.Services
 
             public bool StartRelation(string relationName)
             {
-                _tempModelObject = new ModelObjectv4();
-                _tempRelationObject = new RelationObject();
-                _tempRelationObject.BaseObj.Name = relationName;
-                _tempRelationObject.BaseObj.Type = "relation";
                 return true;
             }
 
             public bool StartRelationKey()
             {
-                _tempModelObject.RelKey = true;
                 return true;
             }
 
@@ -211,8 +207,6 @@ namespace WebApplication3.Services
 
             public void EndRelation()
             {
-                BtdbObject.RelationObjects.Add(_tempRelationObject);
-                _tempRelationObject = new RelationObject();
             }
 
             public void InlineBackRef(int iid)
