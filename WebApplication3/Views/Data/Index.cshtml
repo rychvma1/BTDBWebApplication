@@ -1,4 +1,4 @@
-﻿@model List<WebApplication3.Models.v4.BaseObjectV4>
+﻿@model List<BaseObject>
 @{
     ViewData["Title"] = "Base data";
 }
@@ -27,14 +27,7 @@
                 <td>@baseObject.Name</td>
                 <td>@baseObject.Type</td>
                 <td>
-                    <a href="@Url.Action("SpecificData", "Data", new {})">
-                        @using (Html.BeginForm("SpecificData", "Data", FormMethod.Post))
-                        {
-                            @Html.Hidden("Name", (object) baseObject.Name)
-                            @Html.Hidden("Type", (object) baseObject.Type)
-                            <input type="submit" value="Detail"/>
-                        }
-                    </a>
+                    <button>@Html.ActionLink("Detail", "SpecificData", "Data", new {name = baseObject.Name, type = baseObject.Type})</button>
                 </td>
             </tr>
         }

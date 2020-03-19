@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
 using Newtonsoft.Json;
-using WebApplication3.Models.v4;
+using WebApplication3.Models;
 using WebApplication3.Services;
 
 namespace WebApplication3.Controllers
@@ -15,18 +14,17 @@ namespace WebApplication3.Controllers
         private readonly IBaseDataService _baseDataService;
         private readonly ISpecificSingletonDataService _specificSingletonDataService;
         private readonly ISpecificRelationDataService _specificRelationDataService;
-        private int _pageCount;
         private readonly PhysicalFileProvider _provider;
-        private List<ModelObjectv4> List { get; set; }
+        private List<ModelObject> List { get; set; }
 
-        public DataController(IBaseDataService baseDataService,
+        public DataController(
+            IBaseDataService baseDataService,
             ISpecificSingletonDataService specificSingletonDataService,
             ISpecificRelationDataService specificRelationDataService)
         {
             _baseDataService = baseDataService;
             _specificSingletonDataService = specificSingletonDataService;
             _specificRelationDataService = specificRelationDataService;
-
             _provider = new PhysicalFileProvider(AppDomain.CurrentDomain.BaseDirectory);
         }
 
@@ -35,106 +33,59 @@ namespace WebApplication3.Controllers
             return View(GetBaseObjects());
         }
 
-        [HttpPost]
+        public IActionResult DetailData(int? page, string name, string type)
+        {
+            ViewBag.Name = name;
+            ViewBag.Type = type;
+            var m = Find(name, type);
+
+            var itemsOnPage = 50;
+            var pg = page ?? 1;
+            var totalItems = m.Values.Count;
+            ViewBag.Pages = (int) Math.Ceiling((double) totalItems / (double) itemsOnPage);
+            ViewBag.CurrentPage = pg;
+            
+            if (type != "InlineObject" && type != "relValue")
+            {
+                var x = (pg - 1) * itemsOnPage;
+                if ((m.Values.Count - x) < itemsOnPage)
+                {
+                    m.Values = m.Values.GetRange(x, m.Values.Count - x);
+                }
+                else
+                {
+                    m.Values = m.Values.GetRange(x, itemsOnPage);
+                }
+            }
+
+            return View(m);
+        }
+
         public IActionResult SpecificData(int? page, string name, string type)
         {
             ViewBag.Name = name;
             ViewBag.Type = type;
 
-//            var itemsOnPage = 1;
-//            var pg = page.HasValue ? page.Value : 1;
-//            var baseList = GetBaseObjectsPaged(pg, itemsOnPage, out var totalCount);
-
-//            ViewBag.Pages = (int) Math.Ceiling((double) totalCount / (double) itemsOnPage);
-//            ViewBag.CurrentPage = page;
-
-            return View(GetSpecificData(name, type));
-        }
-
-        private BtdbObject GetBtdbObject()
-        {
-            return _baseDataService.IterateDB();
-        }
-
-        private List<BaseObjectV4> GetBaseObjects()
-        {
-            var list = new List<BaseObjectV4>();
-
-            var btdbObject = GetBtdbObject();
-
-            list.AddRange(btdbObject.SingletonObjects.Select(singletonObject => singletonObject.BaseObj));
-            list.AddRange(btdbObject.RelationObjects.Select(relationObject => relationObject.BaseObj));
-
-            return list;
-        }
-
-        private SingletonObject GetSingletonObject(string name)
-        {
-            return _specificSingletonDataService.IterateDB(name);
-        }
-
-        private RelationObject GetRelationObject(string name)
-        {
-            return _specificRelationDataService.IterateDB(name);
-        }
-
-        private List<ModelObjectv4> GetSpecificData(string name, string type)
-        {
-            _pageCount = 0;
-
-            if (type.Equals("singleton"))
+            List = GetSpecificData(name, type);
+            var itemsOnPage = 50;
+            var pg = page ?? 1;
+            var totalItems = List.Count;
+            ViewBag.Pages = (int) Math.Ceiling((double) totalItems / (double) itemsOnPage);
+            ViewBag.CurrentPage = pg;
+            if (List.Count > 1)
             {
-                List = GetSingletonObject(name).ModelObjects;
-                var json = JsonConvert.SerializeObject(List);
-                System.IO.File.WriteAllText(_provider.Root + "JSON.json", json);
-
-                List.ForEach(o =>
+                var x = (pg - 1) * itemsOnPage;
+                if ((List.Count - x) < itemsOnPage)
                 {
-                    if (o.Name.Equals("DictionaryKey"))
-                    {
-                        _pageCount++;
-                    }
-                });
-            }
-            else if (type.Equals("relation"))
-            {
-                List = GetRelationObject(name).ModelObjects;
-                var json = JsonConvert.SerializeObject(List);
-                System.IO.File.WriteAllText(_provider.Root + "JSON.json", json);
-
-                List.ForEach(o =>
+                    List = List.GetRange(x, List.Count - x);
+                }
+                else
                 {
-                    if (o.RelKey == true)
-                    {
-                        _pageCount++;
-                        o.Name += " (relKey)";
-                    }
-
-                    if (o.Type.Equals("List"))
-                    {
-                        
-                    }
-                });
-            }
-
-            return List;
-        }
-
-        private List<ModelObjectv4> GetSpecificDataPaged(string name, string type, int pg, int count,
-            out int totalCount)
-        {
-            var dic = new Dictionary<int, List<ModelObjectv4>>();
-            var list = GetSpecificData(name, type);
-            totalCount = list.Count;
-
-            foreach (var o in list)
-            {
-                if (o.Name.Equals("DictionaryKey"))
-                {
+                    List = List.GetRange(x, itemsOnPage);
                 }
             }
 
-            return list;
+            return View(List);
         }
 
         public IActionResult DownloadJson()
@@ -156,8 +107,143 @@ namespace WebApplication3.Controllers
                 List = GetRelationObject(name).ModelObjects;
             }
 
-            var json = List;
-            return Json(json);
+            return Json(List);
+        }
+
+        private List<ModelObject> GetDataFromJson()
+        {
+            var fileInfo = _provider.GetFileInfo("JSON.json");
+            var filePath = fileInfo.PhysicalPath;
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+            var str = System.Text.Encoding.Default.GetString(fileBytes);
+            return JsonConvert.DeserializeObject<List<ModelObject>>(str);
+        }
+
+        private BtdbObject GetBtdbObject()
+        {
+            return _baseDataService.IterateDB();
+        }
+
+        private List<BaseObject> GetBaseObjects()
+        {
+            var list = new List<BaseObject>();
+
+            var btdbObject = GetBtdbObject();
+
+            list.AddRange(btdbObject.SingletonObjects.Select(singletonObject => singletonObject.BaseObj));
+            list.AddRange(btdbObject.RelationObjects.Select(relationObject => relationObject.BaseObj));
+
+            return list;
+        }
+
+        private SingletonObject GetSingletonObject(string name)
+        {
+            return _specificSingletonDataService.IterateDB(name);
+        }
+
+        private RelationObject GetRelationObject(string name)
+        {
+            return _specificRelationDataService.IterateDB(name);
+        }
+
+        private List<ModelObject> GetSpecificData(string name, string type)
+        {
+            if (type.Equals("singleton"))
+            {
+                List = GetSingletonObject(name).ModelObjects;
+                var json = JsonConvert.SerializeObject(List);
+                System.IO.File.WriteAllText(_provider.Root + "JSON.json", json);
+            }
+            else if (type.Equals("relation"))
+            {
+                List = GetRelationObject(name).ModelObjects;
+                var json = JsonConvert.SerializeObject(List);
+                System.IO.File.WriteAllText(_provider.Root + "JSON.json", json);
+
+                List.ForEach(o =>
+                {
+                    if (o.IsRelKey == true)
+                    {
+                        o.Name += " (relKey)";
+                    }
+                });
+            }
+
+            return List;
+        }
+
+        private ModelObject Find(string name, string type)
+        {
+            ModelObject m = new ModelObject();
+            List = GetDataFromJson();
+            List.ForEach(a =>
+            {
+                if (a.Name == name && a.Type == type)
+                {
+                    m = a;
+                }
+                else
+                {
+                    a.Values.ForEach(b =>
+                    {
+                        if (b.Name == name && b.Type == type)
+                        {
+                            m = b;
+                        }
+                        else
+                        {
+                            b.Values.ForEach(c =>
+                            {
+                                if (c.Name == name && c.Type == type)
+                                {
+                                    m = c;
+                                }
+                                else
+                                {
+                                    c.Values.ForEach(d =>
+                                    {
+                                        if (d.Name == name && d.Type == type)
+                                        {
+                                            m = d;
+                                        }
+                                        else
+                                        {
+                                            d.Values.ForEach(e =>
+                                            {
+                                                if (e.Name == name && e.Type == type)
+                                                {
+                                                    m = e;
+                                                }
+                                                else
+                                                {
+                                                    e.Values.ForEach(f =>
+                                                    {
+                                                        if (f.Name == name && f.Type == type)
+                                                        {
+                                                            m = f;
+                                                        }
+                                                        else
+                                                        {
+                                                            f.Values.ForEach(g =>
+                                                            {
+                                                                if (g.Name == name && g.Type == type)
+                                                                {
+                                                                    m = g;
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+            return m;
         }
     }
 }

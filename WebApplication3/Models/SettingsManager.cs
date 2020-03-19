@@ -33,7 +33,6 @@ namespace WebApplication3.Models
                 var newOptions = new Settings(Current);
                 configure(newOptions);
 
-                // writing new settings (with some fault tolerance)
                 var configSource = _configurationProvider.Source;
                 var fileName = Path.Combine(((PhysicalFileProvider)configSource.FileProvider).Root, configSource.Path);
                 var tempFileName = fileName + ".new";
@@ -42,7 +41,6 @@ namespace WebApplication3.Models
                     File.Delete(fileName);
                 File.Move(tempFileName, fileName);
 
-                // signalling change
                 _configurationProvider.Reload();
             }
         }

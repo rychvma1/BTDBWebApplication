@@ -1,11 +1,11 @@
-﻿@model List<WebApplication3.Models.v4.ModelObjectv4>
+﻿@model List<ModelObject>
 @{
     ViewData["Title"] = "Detail";
 }
 
 <h1>@ViewBag.Name detail (@ViewBag.Type)</h1>
 
-<div>
+<div class="row align-content-center">
     <a href="@Url.Action("GetJson", "Data", new {})">
         @using (Html.BeginForm("GetJson", "Data", FormMethod.Post))
         {
@@ -36,25 +36,50 @@
         <tr>
             <td>@obj.Name</td>
             <td>@obj.Type</td>
-            <td>@obj.Value</td>
+            <td>
+                @if (@obj.Value != null)
+                {
+                    @obj.Value
+                }
+                else
+                {
+                    <button>@Html.ActionLink("Detail", "DetailData", "Data", new {name = obj.Name, type = obj.Type})</button>
+                }
+
+            </td>
         </tr>
     }
 
     </tbody>
 </table>
 
-@* @if (ViewBag.Pages != null) *@
-@* { *@
-@*     <ul class="pagination"> *@
-@*         @for (int i = 1; i <= ViewBag.Pages; i++) *@
-@*         { *@
-@*             <li class="@(ViewBag.CurrentPage == i ? "active" : "")"> *@
-@*                 <a href="@Url.Action("SpecificData", "Visitor", new {page = i})">@i</a> *@
-@*              </li> *@
-@*          } *@
-@*      </ul> *@
-@*  } *@
+<div class="row align-content-center">
+    @if (ViewBag.Pages != null)
+    {
+        <nav aria-label="Page navigation example">
+            <ul class="pagination align-items-center">
+                <li class="active page-item">
+                    <a href="@Url.Action("SpecificData", "Data", new {page = 1, name = ViewBag.Name, type = ViewBag.Type})" class="page-link">First</a>
+                </li>
+                <li class="@(ViewBag.CurrentPage > 1 ? "active" : "disabled") page-item">
+                    <a href="@Url.Action("SpecificData", "Data", new {page = @ViewBag.CurrentPage - 1, name = ViewBag.Name, type = ViewBag.Type})" class="page-link">Prev</a>
+                </li>
+                @for (var i = 1; i <= ViewBag.Pages; i++)
+                {
+                    <li class="@(ViewBag.CurrentPage == i ? "active" : "") page-item">
+                        <a href="@Url.Action("SpecificData", "Data", new {page = i, name = ViewBag.Name, type = ViewBag.Type})" class="page-link">@i</a>
+                    </li>
+                }
+                <li class="@(ViewBag.CurrentPage < ViewBag.Pages ? "active" : "disabled") page-item">
+                    <a href="@Url.Action("SpecificData", "Data", new {page = @ViewBag.CurrentPage + 1, name = ViewBag.Name, type = ViewBag.Type})" class="page-link">Next</a>
+                </li>
+                <li class="active page-item">
+                    <a href="@Url.Action("SpecificData", "Data", new {page = ViewBag.Pages, name = ViewBag.Name, type = ViewBag.Type})" class="page-link">Last</a>
+                </li>
+            </ul>
+        </nav>
+    }
 
-<p>
-    <button type="button">@Html.ActionLink("Back to table", "Index")</button>
-</p>
+</div>
+
+<button type="button" class="align-content-center">@Html.ActionLink("Back to table", "Index")</button>

@@ -29,7 +29,7 @@ namespace WebApplication3.Models
         public override IConfigurationProvider Build(IConfigurationBuilder builder)
         {
             Optional = true;
-            ReloadOnChange = false; // we manually signal the changes, don't want to rely on file system notifications
+            ReloadOnChange = false;
             EnsureDefaults(builder);
             return new SettingsConfigurationProvider(this);
         }

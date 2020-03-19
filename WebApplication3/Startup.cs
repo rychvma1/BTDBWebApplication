@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using BTDB.KVDBLayer;
 using BTDB.ODBLayer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using WebApplication3.Models;
 using WebApplication3.Services;
 
@@ -28,23 +22,13 @@ namespace WebApplication3
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var json = File.ReadAllText(@"App_Data\settings.json");
-            var path = JsonConvert.DeserializeObject<Settings>(json);
-
-            services.Configure<Settings>(Configuration);
             services.AddScoped(sp => sp.GetService<IOptionsSnapshot<Settings>>().Value);
             
-            if (!path.DirPath.Equals(""))
-            {
-                IKeyValueDB kvDb = new KeyValueDB(new OnDiskFileCollection(path.DirPath));
-                IObjectDB db = new ObjectDB();
-                db.Open(kvDb, false); 
-                services.AddSingleton(db);
-                services.AddSingleton<IBaseDataService, BaseDataService>();
-                // services.AddSingleton<ICustomVisitor, CustomVisitor>();
-                services.AddSingleton<ISpecificSingletonDataService, SpecificSingletonSingletonDataService>();
-                services.AddSingleton<ISpecificRelationDataService, SpecificRelationDataService>();
-            }
+            IObjectDB db = new ObjectDB();
+            services.AddSingleton(db);
+            services.AddSingleton<IBaseDataService, BaseDataService>();
+            services.AddSingleton<ISpecificSingletonDataService, SpecificSingletonSingletonDataService>();
+            services.AddSingleton<ISpecificRelationDataService, SpecificRelationDataService>();
 //            services.AddSingleton<Func<IObjectDBTransaction, IUserTable>>(initDB(db));
             services.AddControllersWithViews();
         }
@@ -78,7 +62,7 @@ namespace WebApplication3
             });
         }
 
-        private static Func<IObjectDBTransaction, IUserTable> initDB(IObjectDB db)
+        /*private static Func<IObjectDBTransaction, IUserTable> initDB(IObjectDB db)
         {
             Func<IObjectDBTransaction, IUserTable> creator;
             using (var tr = db.StartTransaction())
@@ -203,6 +187,6 @@ namespace WebApplication3
             }
 
             return creator;
-        }
+        }*/
     }
 }
