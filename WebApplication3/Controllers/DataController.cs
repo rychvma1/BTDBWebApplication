@@ -16,6 +16,7 @@ namespace WebApplication3.Controllers
         private readonly ISpecificRelationDataService _specificRelationDataService;
         private readonly PhysicalFileProvider _provider;
         private List<ModelObject> List { get; set; }
+        private const int ItemsOnPage = 50;
 
         public DataController(
             IBaseDataService baseDataService,
@@ -33,32 +34,33 @@ namespace WebApplication3.Controllers
             return View(GetBaseObjects());
         }
 
-        public IActionResult DetailData(int? page, string name, string type)
+        public IActionResult DetailData(int? page, string path)
         {
-            ViewBag.Name = name;
-            ViewBag.Type = type;
-            var m = Find(name, type);
-
-            var itemsOnPage = 50;
-            var pg = page ?? 1;
-            var totalItems = m.Values.Count;
-            ViewBag.Pages = (int) Math.Ceiling((double) totalItems / (double) itemsOnPage);
-            ViewBag.CurrentPage = pg;
+            ViewBag.Path = path;
+            var model = Find(path);
             
-            if (type != "InlineObject" && type != "relValue")
+            ViewBag.Name = model.Name;
+            ViewBag.Type = model.Type;
+            
+            var pg = page ?? 1;
+            var totalItems = model.Values.Count;
+            ViewBag.Pages = (int) Math.Ceiling((double) totalItems / (double) ItemsOnPage);
+            ViewBag.CurrentPage = pg;
+
+            if (model.Type != "InlineObject" && model.Type != "relValue")
             {
-                var x = (pg - 1) * itemsOnPage;
-                if ((m.Values.Count - x) < itemsOnPage)
+                var x = (pg - 1) * ItemsOnPage;
+                if ((model.Values.Count - x) < ItemsOnPage)
                 {
-                    m.Values = m.Values.GetRange(x, m.Values.Count - x);
+                    model.Values = model.Values.GetRange(x, model.Values.Count - x);
                 }
                 else
                 {
-                    m.Values = m.Values.GetRange(x, itemsOnPage);
+                    model.Values = model.Values.GetRange(x, ItemsOnPage);
                 }
             }
 
-            return View(m);
+            return View(model);
         }
 
         public IActionResult SpecificData(int? page, string name, string type)
@@ -67,21 +69,20 @@ namespace WebApplication3.Controllers
             ViewBag.Type = type;
 
             List = GetSpecificData(name, type);
-            var itemsOnPage = 50;
             var pg = page ?? 1;
             var totalItems = List.Count;
-            ViewBag.Pages = (int) Math.Ceiling((double) totalItems / (double) itemsOnPage);
+            ViewBag.Pages = (int) Math.Ceiling((double) totalItems / (double) ItemsOnPage);
             ViewBag.CurrentPage = pg;
             if (List.Count > 1)
             {
-                var x = (pg - 1) * itemsOnPage;
-                if ((List.Count - x) < itemsOnPage)
+                var x = (pg - 1) * ItemsOnPage;
+                if ((List.Count - x) < ItemsOnPage)
                 {
                     List = List.GetRange(x, List.Count - x);
                 }
                 else
                 {
-                    List = List.GetRange(x, itemsOnPage);
+                    List = List.GetRange(x, ItemsOnPage);
                 }
             }
 
@@ -172,78 +173,20 @@ namespace WebApplication3.Controllers
             return List;
         }
 
-        private ModelObject Find(string name, string type)
+        private ModelObject Find(string path)
         {
-            ModelObject m = new ModelObject();
+            var objNames = path.Split("/").ToList();
             List = GetDataFromJson();
-            List.ForEach(a =>
+            var model = List.Find(x => x.Name.Contains(objNames[0]));
+            if (objNames.Count > 1)
             {
-                if (a.Name == name && a.Type == type)
+                for (var i = 1; i < objNames.Count; i++)
                 {
-                    m = a;
+                    model = model.Values.Find(x => x.Name.Contains(objNames[i]));
                 }
-                else
-                {
-                    a.Values.ForEach(b =>
-                    {
-                        if (b.Name == name && b.Type == type)
-                        {
-                            m = b;
-                        }
-                        else
-                        {
-                            b.Values.ForEach(c =>
-                            {
-                                if (c.Name == name && c.Type == type)
-                                {
-                                    m = c;
-                                }
-                                else
-                                {
-                                    c.Values.ForEach(d =>
-                                    {
-                                        if (d.Name == name && d.Type == type)
-                                        {
-                                            m = d;
-                                        }
-                                        else
-                                        {
-                                            d.Values.ForEach(e =>
-                                            {
-                                                if (e.Name == name && e.Type == type)
-                                                {
-                                                    m = e;
-                                                }
-                                                else
-                                                {
-                                                    e.Values.ForEach(f =>
-                                                    {
-                                                        if (f.Name == name && f.Type == type)
-                                                        {
-                                                            m = f;
-                                                        }
-                                                        else
-                                                        {
-                                                            f.Values.ForEach(g =>
-                                                            {
-                                                                if (g.Name == name && g.Type == type)
-                                                                {
-                                                                    m = g;
-                                                                }
-                                                            });
-                                                        }
-                                                    });
-                                                }
-                                            });
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-            return m;
+            }
+            
+            return model;
         }
     }
 }

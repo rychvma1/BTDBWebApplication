@@ -27,7 +27,7 @@
                 }
                 else
                 {
-                    <button>@Html.ActionLink("Detail", "DetailData", "Data", new {name = obj.Name, type = obj.Type})</button>
+                    <button>@Html.ActionLink("Detail", "DetailData", "Data", new {path = ViewBag.Path + "/" + obj.Name})</button>
                 }
 
             </td>
@@ -42,23 +42,23 @@
     {
         <nav aria-label="Page navigation example">
             <ul class="pagination align-items-center">
-                <li class="active page-item">
-                    <a href="@Url.Action("DetailData", "Data", new {page = 1, name = ViewBag.Name, type = ViewBag.Type})" class="page-link">First</a>
+                <li class="@(ViewBag.CurrentPage != 1 ? "active" : "disabled") page-item">
+                    <a href="@Url.Action("DetailData", "Data", new {page = 1, path = ViewBag.Path})" class="page-link">First</a>
                 </li>
                 <li class="@(ViewBag.CurrentPage > 1 ? "active" : "disabled") page-item">
-                    <a href="@Url.Action("DetailData", "Data", new {page = @ViewBag.CurrentPage - 1, name = ViewBag.Name, type = ViewBag.Type})" class="page-link">Prev</a>
+                    <a href="@Url.Action("DetailData", "Data", new {page = @ViewBag.CurrentPage - 1, path = ViewBag.Path})" class="page-link">Prev</a>
                 </li>
                 @for (var i = 1; i <= ViewBag.Pages; i++)
                 {
                     <li class="@(ViewBag.CurrentPage == i ? "active" : "") page-item">
-                        <a href="@Url.Action("DetailData", "Data", new {page = i, name = ViewBag.Name, type = ViewBag.Type})" class="page-link">@i</a>
+                        <a href="@Url.Action("DetailData", "Data", new {page = i, path = ViewBag.Path})" class="page-link">@i</a>
                     </li>
                 }
                 <li class="@(ViewBag.CurrentPage < ViewBag.Pages ? "active" : "disabled") page-item">
-                    <a href="@Url.Action("DetailData", "Data", new {page = @ViewBag.CurrentPage + 1, name = ViewBag.Name, type = ViewBag.Type})" class="page-link">Next</a>
+                    <a href="@Url.Action("DetailData", "Data", new {page = @ViewBag.CurrentPage + 1, path = ViewBag.Path})" class="page-link">Next</a>
                 </li>
-                <li class="active page-item">
-                    <a href="@Url.Action("DetailData", "Data", new {page = ViewBag.Pages, name = ViewBag.Name, type = ViewBag.Type})" class="page-link">Last</a>
+                <li class="@(ViewBag.CurrentPage != ViewBag.Pages ? "active" : "disabled") page-item">
+                    <a href="@Url.Action("DetailData", "Data", new {page = ViewBag.Pages, path = ViewBag.Path})" class="page-link">Last</a>
                 </li>
             </ul>
         </nav>
