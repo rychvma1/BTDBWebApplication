@@ -16,7 +16,7 @@ namespace WebApplication3.Controllers
         private readonly ISpecificRelationDataService _specificRelationDataService;
         private readonly PhysicalFileProvider _provider;
         private List<ModelObject> List { get; set; }
-        private const int ItemsOnPage = 50;
+        private const int ItemsOnPage = 2;
 
         public DataController(
             IBaseDataService baseDataService,
@@ -37,14 +37,11 @@ namespace WebApplication3.Controllers
         public IActionResult DetailData(int? page, string path)
         {
             ViewBag.Path = path;
-            var model = Find(path);
-            
-            ViewBag.Name = model.Name;
-            ViewBag.Type = model.Type;
-            
+            var model = FindModelObject(path);
+
             var pg = page ?? 1;
             var totalItems = model.Values.Count;
-            ViewBag.Pages = (int) Math.Ceiling((double) totalItems / (double) ItemsOnPage);
+            ViewBag.Pages = (int) Math.Ceiling((double) totalItems / ItemsOnPage);
             ViewBag.CurrentPage = pg;
 
             if (model.Type != "InlineObject" && model.Type != "relValue")
@@ -71,7 +68,7 @@ namespace WebApplication3.Controllers
             List = GetSpecificData(name, type);
             var pg = page ?? 1;
             var totalItems = List.Count;
-            ViewBag.Pages = (int) Math.Ceiling((double) totalItems / (double) ItemsOnPage);
+            ViewBag.Pages = (int) Math.Ceiling((double) totalItems / ItemsOnPage);
             ViewBag.CurrentPage = pg;
             if (List.Count > 1)
             {
@@ -173,7 +170,7 @@ namespace WebApplication3.Controllers
             return List;
         }
 
-        private ModelObject Find(string path)
+        private ModelObject FindModelObject(string path)
         {
             var objNames = path.Split("/").ToList();
             List = GetDataFromJson();
@@ -185,7 +182,7 @@ namespace WebApplication3.Controllers
                     model = model.Values.Find(x => x.Name.Contains(objNames[i]));
                 }
             }
-            
+
             return model;
         }
     }

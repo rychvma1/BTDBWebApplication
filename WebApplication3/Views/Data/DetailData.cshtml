@@ -38,7 +38,7 @@
 </table>
 
 <div class="row align-content-center">
-    @if (ViewBag.Pages != null && ViewBag.Type != "InlineObject" && ViewBag.Type != "relValue")
+    @if (ViewBag.Pages != null && Model.Type != "InlineObject" && Model.Type != "relValue")
     {
         <nav aria-label="Page navigation example">
             <ul class="pagination align-items-center">
