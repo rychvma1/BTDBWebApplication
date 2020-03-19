@@ -16,7 +16,7 @@ namespace WebApplication3.Controllers
         private readonly ISpecificRelationDataService _specificRelationDataService;
         private readonly PhysicalFileProvider _provider;
         private List<ModelObject> List { get; set; }
-        private const int ItemsOnPage = 2;
+        private const int ItemsOnPage = 50;
 
         public DataController(
             IBaseDataService baseDataService,
