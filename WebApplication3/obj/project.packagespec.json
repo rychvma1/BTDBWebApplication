@@ -18,7 +18,11 @@
     },
     "frameworks": {
       "netcoreapp3.0": {
-        "projectReferences": {}
+        "projectReferences": {
+          "C:\\Users\\matus\\source\\repos\\WebApplication3\\BTDBPart\\BTDBPart.csproj": {
+            "projectPath": "C:\\Users\\matus\\source\\repos\\WebApplication3\\BTDBPart\\BTDBPart.csproj"
+          }
+        }
       }
     },
     "warningProperties": {

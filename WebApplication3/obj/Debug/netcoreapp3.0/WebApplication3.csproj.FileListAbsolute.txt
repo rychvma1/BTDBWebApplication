@@ -134,3 +134,5 @@ C:\Users\matus\source\repos\WebApplication3\WebApplication3\obj\Debug\netcoreapp
 C:\Users\matus\source\repos\WebApplication3\WebApplication3\obj\Debug\netcoreapp3.0\WebApplication3.csproj.CoreCompileInputs.cache
 C:\Users\matus\source\repos\WebApplication3\WebApplication3\obj\Debug\netcoreapp3.0\WebApplication3.genruntimeconfig.cache
 C:\Users\matus\source\repos\WebApplication3\WebApplication3\obj\Debug\netcoreapp3.0\Razor\Views\Data\DetailData.cshtml.g.cs
+C:\Users\matus\source\repos\WebApplication3\WebApplication3\bin\Debug\netcoreapp3.0\BTDBPart.dll
+C:\Users\matus\source\repos\WebApplication3\WebApplication3\bin\Debug\netcoreapp3.0\BTDBPart.pdb

@@ -1,12 +1,12 @@
 using BTDB.ODBLayer;
+using BTDBPart.Models;
+using BTDBPart.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using WebApplication3.Models;
-using WebApplication3.Services;
 
 namespace WebApplication3
 {
@@ -29,7 +29,6 @@ namespace WebApplication3
             services.AddSingleton<IBaseDataService, BaseDataService>();
             services.AddSingleton<ISpecificSingletonDataService, SpecificSingletonSingletonDataService>();
             services.AddSingleton<ISpecificRelationDataService, SpecificRelationDataService>();
-//            services.AddSingleton<Func<IObjectDBTransaction, IUserTable>>(initDB(db));
             services.AddControllersWithViews();
         }
 
@@ -61,132 +60,5 @@ namespace WebApplication3
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
-
-        /*private static Func<IObjectDBTransaction, IUserTable> initDB(IObjectDB db)
-        {
-            Func<IObjectDBTransaction, IUserTable> creator;
-            using (var tr = db.StartTransaction())
-            {
-                //table
-                creator = tr.InitRelation<IUserTable>("UserTable");
-                var customObjTable = creator(tr);
-
-                customObjTable.Insert(new User
-                {
-                    UserId = 1, Name = "admin", Age = 100, Gender = Gender.Male, Addresses = new List<string> {"Brno"},
-                    ByteArray = Encoding.ASCII.GetBytes("admin")
-                });
-                customObjTable.Insert(new User
-                {
-                    UserId = 2, Name = "Ema", Age = 25, Gender = Gender.Female, Addresses = new List<string> {"Kosice"},
-                    ByteArray = Encoding.ASCII.GetBytes("Ema")
-                });
-                customObjTable.Insert(new User
-                {
-                    UserId = 3, Name = "Nick", Age = 26, Gender = Gender.Male, Addresses = new List<string> {"London"},
-                    ByteArray = Encoding.ASCII.GetBytes("Nick")
-                });
-
-                // dictionary Id2UserClass
-                var rootName = tr.Singleton<Id2UserClass>();
-                var dict = rootName.Id2User;
-
-                dict.Add(1,
-                    new User
-                    {
-                        UserId = 1, Name = "Matus1", Age = 24, Gender = Gender.Male,
-                        Addresses = new List<string> {"HK", "KE"}
-                    });
-                dict.Add(2, new User {UserId = 2, Name = "Matus2", Age = 24, Gender = Gender.Male});
-                dict.Add(3, new User {UserId = 3, Name = "Matus3", Age = 24, Gender = Gender.Male});
-                dict.Add(4, new User {UserId = 4, Name = "Matus4", Age = 24, Gender = Gender.Male});
-                dict.Add(5, new User {UserId = 5, Name = "Matus5", Age = 24, Gender = Gender.Male});
-
-                rootName.Users = new List<User>
-                {
-                    new User
-                    {
-                        UserId = 1, Name = "admin", Age = 100, Gender = Gender.Male, Addresses = new List<string> {"BA"}
-                    },
-                    new User {UserId = 2, Name = "Ema", Age = 25, Gender = Gender.Female},
-                    new User {UserId = 3, Name = "Nick", Age = 26, Gender = Gender.Male}
-                };
-
-                // dictionary DateTimeToUserClass
-                var dateToUser = tr.Singleton<DateTimeToUserClass>();
-                var dateTimeToUserDictionary = dateToUser.DateTimeToUser;
-
-                dateTimeToUserDictionary.Add(DateTime.MinValue, new User
-                {
-                    UserId = 1,
-                    Name = "Matus1",
-                    Age = 24,
-                    Gender = Gender.Male,
-                    Addresses = new List<string> {"HK", "KE"}
-                });
-                dateTimeToUserDictionary.Add(DateTime.Now,
-                    new User {UserId = 2, Name = "Matus2", Age = 24, Gender = Gender.Male});
-
-                // dictionary KeyObjToUserClass
-                var keyObjToUser = tr.Singleton<KeyObjToUserClass>();
-                var keyDict = keyObjToUser.KeyObjToUser;
-
-                keyDict.Add(new KeyObj
-                    {
-                        DateTime = DateTime.Now,
-                        Gender = Gender.Male,
-                        Id = UInt64.MinValue
-                    },
-                    new User
-                    {
-                        UserId = 1,
-                        Name = "Matus1",
-                        Age = 24,
-                        Gender = Gender.Male,
-                        Addresses = new List<string> {"HK", "KE"}
-                    });
-                keyDict.Add(new KeyObj
-                    {
-                        DateTime = DateTime.MaxValue,
-                        Gender = Gender.Female,
-                        Id = UInt64.MaxValue
-                    },
-                    new User
-                    {
-                        UserId = 2,
-                        Name = "Matus2",
-                        Age = 124,
-                        Gender = Gender.Male,
-                        Addresses = new List<string> {"BA", "KE"}
-                    });
-
-                // dictionary UlongToStringClass
-                var ulongToString = tr.Singleton<UlongToStringClass>();
-                var ulongToStringDictionary = ulongToString.UlongToString;
-
-                ulongToStringDictionary.Add(0, "test 0");
-                ulongToStringDictionary.Add(1, "test 1");
-
-                // list ListOfStringsClass
-                var listOfStrings = tr.Singleton<ListOfStringsClass>();
-                listOfStrings.ListOfStrings = new List<string>
-                {
-                    "test 0", 
-                    "test 1"
-                };
-
-                // list ListOfIntegersClass
-                var listOfIntegers = tr.Singleton<ListOfIntegersClass>();
-                listOfIntegers.ListOfIntegers = new List<int>
-                {
-                   0,
-                   1
-                };
-
-                tr.Commit();
-            }
-
-            return creator;
-        }*/
     }
 }

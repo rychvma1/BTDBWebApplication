@@ -1,0 +1,9 @@
+C:\Users\matus\source\repos\WebApplication3\BTDBPart\bin\Debug\netcoreapp3.0\BTDBPart.deps.json
+C:\Users\matus\source\repos\WebApplication3\BTDBPart\bin\Debug\netcoreapp3.0\BTDBPart.dll
+C:\Users\matus\source\repos\WebApplication3\BTDBPart\bin\Debug\netcoreapp3.0\BTDBPart.pdb
+C:\Users\matus\source\repos\WebApplication3\BTDBPart\obj\Debug\netcoreapp3.0\BTDBPart.csprojAssemblyReference.cache
+C:\Users\matus\source\repos\WebApplication3\BTDBPart\obj\Debug\netcoreapp3.0\BTDBPart.csproj.CoreCompileInputs.cache
+C:\Users\matus\source\repos\WebApplication3\BTDBPart\obj\Debug\netcoreapp3.0\BTDBPart.AssemblyInfoInputs.cache
+C:\Users\matus\source\repos\WebApplication3\BTDBPart\obj\Debug\netcoreapp3.0\BTDBPart.AssemblyInfo.cs
+C:\Users\matus\source\repos\WebApplication3\BTDBPart\obj\Debug\netcoreapp3.0\BTDBPart.dll
+C:\Users\matus\source\repos\WebApplication3\BTDBPart\obj\Debug\netcoreapp3.0\BTDBPart.pdb

@@ -27,4 +27,8 @@
     <_ContentIncludedByDefault Remove="wwwroot\Scripts\MicrosoftMvcValidation.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BTDBPart\BTDBPart.csproj" />
+  </ItemGroup>
+
 </Project>
