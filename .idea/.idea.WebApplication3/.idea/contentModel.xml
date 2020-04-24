@@ -15,7 +15,6 @@
           <e p="RelationObject.cs" t="Include" />
           <e p="Settings.cs" t="Include" />
           <e p="SingletonObject.cs" t="Include" />
-          <e p="User.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
@@ -30,7 +29,7 @@
           <e p="ISpecificRelationDataService.cs" t="Include" />
           <e p="ISpecificSingletonDataService.cs" t="Include" />
           <e p="SpecificRelationDataService.cs" t="Include" />
-          <e p="SpecificSingletonSingletonDataService.cs" t="Include" />
+          <e p="SpecificSingletonDataService.cs" t="Include" />
           <e p="Visitors" t="Include">
             <e p="BaseDataVisitor.cs" t="Include" />
             <e p="Visitor.cs" t="Include" />
@@ -39,8 +38,13 @@
       </e>
       <e p="WebApplication3" t="IncludeRecursive">
         <e p="App_Data" t="Include">
-          <e p="00000001.trl" t="Include" />
           <e p="settings.json" t="Include" />
+          <e p="TestDB1" t="Include">
+            <e p="00000001.trl" t="Include" />
+          </e>
+          <e p="TestDB2" t="Include">
+            <e p="00000001.trl" t="Include" />
+          </e>
         </e>
         <e p="appsettings.Development.json" t="Include" />
         <e p="appsettings.json" t="Include" />

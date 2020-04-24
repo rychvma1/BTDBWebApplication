@@ -27,7 +27,7 @@ namespace WebApplication3
             IObjectDB db = new ObjectDB();
             services.AddSingleton(db);
             services.AddSingleton<IBaseDataService, BaseDataService>();
-            services.AddSingleton<ISpecificSingletonDataService, SpecificSingletonSingletonDataService>();
+            services.AddSingleton<ISpecificSingletonDataService, SpecificSingletonDataService>();
             services.AddSingleton<ISpecificRelationDataService, SpecificRelationDataService>();
             services.AddControllersWithViews();
         }

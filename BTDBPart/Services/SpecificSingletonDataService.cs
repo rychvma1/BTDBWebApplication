@@ -7,12 +7,12 @@ using Newtonsoft.Json;
 
 namespace BTDBPart.Services
 {
-    public class SpecificSingletonSingletonDataService : ISpecificSingletonDataService
+    public class SpecificSingletonDataService : ISpecificSingletonDataService
     {
         private IObjectDB TempDb { get; }
 
 
-        public SpecificSingletonSingletonDataService(IObjectDB tempDb)
+        public SpecificSingletonDataService(IObjectDB tempDb)
         {
             TempDb = tempDb;
         }
