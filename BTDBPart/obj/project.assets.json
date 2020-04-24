@@ -133,6 +133,72 @@
           "lib/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.dll": {}
         }
       }
+    },
+    ".NETCoreApp,Version=v3.0/win-x86": {
+      "BTDB/19.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Mono.Posix.NETStandard": "1.0.0",
+          "System.Memory": "4.5.3",
+          "System.Numerics.Vectors": "4.5.0",
+          "System.Runtime.CompilerServices.Unsafe": "4.5.2"
+        },
+        "compile": {
+          "lib/netcoreapp3.0/BTDB.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.0/BTDB.dll": {}
+        }
+      },
+      "Mono.Posix.NETStandard/1.0.0": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard2.0/Mono.Posix.NETStandard.dll": {}
+        },
+        "runtime": {
+          "runtimes/win-x86/lib/netstandard2.0/Mono.Posix.NETStandard.dll": {}
+        },
+        "native": {
+          "runtimes/win-x86/native/MonoPosixHelper.dll": {},
+          "runtimes/win-x86/native/libMonoPosixHelper.dll": {}
+        }
+      },
+      "Newtonsoft.Json/12.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
+        }
+      },
+      "System.Memory/4.5.3": {
+        "type": "package",
+        "compile": {
+          "ref/netcoreapp2.1/_._": {}
+        },
+        "runtime": {
+          "lib/netcoreapp2.1/_._": {}
+        }
+      },
+      "System.Numerics.Vectors/4.5.0": {
+        "type": "package",
+        "compile": {
+          "ref/netcoreapp2.0/_._": {}
+        },
+        "runtime": {
+          "lib/netcoreapp2.0/_._": {}
+        }
+      },
+      "System.Runtime.CompilerServices.Unsafe/4.5.2": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.dll": {}
+        }
+      }
     }
   },
   "libraries": {
@@ -383,6 +449,11 @@
           }
         },
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.200\\RuntimeIdentifierGraph.json"
+      }
+    },
+    "runtimes": {
+      "win-x86": {
+        "#import": []
       }
     }
   }

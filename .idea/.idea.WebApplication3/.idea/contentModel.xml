@@ -70,6 +70,9 @@
         <e p="Program.cs" t="Include" />
         <e p="Properties" t="Include">
           <e p="launchSettings.json" t="Include" />
+          <e p="PublishProfiles" t="Include">
+            <e p="FolderProfile.pubxml" t="Include" />
+          </e>
         </e>
         <e p="Startup.cs" t="Include" />
         <e p="Views" t="Include">
