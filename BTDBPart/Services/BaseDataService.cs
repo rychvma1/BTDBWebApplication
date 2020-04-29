@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using BTDB.KVDBLayer;
 using BTDB.ODBLayer;
 using BTDBPart.Models;
@@ -23,20 +24,29 @@ namespace BTDBPart.Services
 
             var json = File.ReadAllText(@"App_Data\settings.json");
             var settings = JsonConvert.DeserializeObject<Settings>(json);
-
-            using (var d = new OnDiskFileCollection(settings.DirPath))
+            try
             {
-                kvDb = new KeyValueDB(d);
-               TempDb.Open(kvDb, false);
-
-                using (var tr = TempDb.StartReadOnlyTransaction())
+                using (var d = new OnDiskFileCollection(settings.DirPath))
                 {
-                    var visitor = new BaseDataVisitor();
-                    var iterator = new ODBIterator(tr, visitor);
-                    iterator.Iterate();
-                    btdbObject = visitor.BtdbObject;
+                    kvDb = new KeyValueDB(d);
+                    TempDb.Open(kvDb, false);
+
+                    using (var tr = TempDb.StartReadOnlyTransaction())
+                    {
+                        var visitor = new BaseDataVisitor();
+                        var iterator = new ODBIterator(tr, visitor);
+                        iterator.Iterate();
+                        btdbObject = visitor.BtdbObject;
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine("Wrong path to .trl files!");
+                throw;
+            }
+            
 
             return btdbObject;
         }
